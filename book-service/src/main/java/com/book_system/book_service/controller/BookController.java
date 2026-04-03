@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +23,8 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookResponseDto create(@Valid @RequestBody BookRequestDto request) {
-        return bookService.create(request);
+    public ResponseEntity<BookResponseDto> create(@Valid @RequestBody BookRequestDto request) {
+        return new ResponseEntity<>(bookService.saveBook(request), HttpStatus.CREATED);
     }
 
 }

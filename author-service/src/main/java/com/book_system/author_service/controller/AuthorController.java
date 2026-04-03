@@ -8,10 +8,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/authors")
@@ -22,7 +21,12 @@ public class AuthorController {
 
     @PostMapping
     public ResponseEntity<AuthorResponseDto> createAuthor(@Valid @RequestBody AuthorRequestDto request) {
-        return new ResponseEntity<>(authorService.create(request), HttpStatus.CREATED);
+        return new ResponseEntity<>(authorService.saveAuthor(request), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{idAuthor}")
+    public ResponseEntity<AuthorResponseDto> getAuthorById(@PathVariable UUID idAuthor) {
+        return new ResponseEntity<>(authorService.getAuthorById(idAuthor), HttpStatus.OK);
     }
 
 }

@@ -5,14 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "author")
+@Table(name = "nationality")
 @Getter
 @Setter
-public class AuthorEntity {
+public class NationalityEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,21 +22,8 @@ public class AuthorEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
-
-    @Column(name = "birth_date", nullable = false)
-    private LocalDate birthDate;
-
-    @ManyToOne
-    @JoinColumn(name = "nationality_id", nullable = false)
-    private NationalityEntity nationality;
-
-    @Column(name = "photo_url", nullable = false)
-    private String photoUrl;
-
-    @Column(name = "active", nullable = false)
-    private Boolean active;
+    @OneToMany(mappedBy = "nationality")
+    Set<AuthorEntity> authors;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
@@ -45,14 +32,13 @@ public class AuthorEntity {
     private Instant updatedAt;
 
     @PrePersist
-    protected void onCreate() {
+    private void prePersist() {
         createdAt = Instant.now();
         updatedAt = Instant.now();
-        active = true;
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    private void preUpdate() {
         updatedAt = Instant.now();
     }
 
