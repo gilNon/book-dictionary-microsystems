@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name = "author-microservice")
+@FeignClient(name = "author-microservice", fallback = AuthorFallBack.class)
 public interface AuthorRestClient {
 
     @GetMapping("/api/v1/authors/{idAuthor}")

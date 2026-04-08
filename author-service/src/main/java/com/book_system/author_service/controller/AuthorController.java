@@ -26,6 +26,7 @@ public class AuthorController {
 
     @GetMapping("/{idAuthor}")
     public ResponseEntity<AuthorResponseDto> getAuthorById(@PathVariable UUID idAuthor) {
+        System.out.println("AuthorController - getAuthorById - idAuthor: " + idAuthor);
         return new ResponseEntity<>(authorService.getAuthorById(idAuthor), HttpStatus.OK);
     }
 
