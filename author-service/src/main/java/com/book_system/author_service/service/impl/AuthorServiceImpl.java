@@ -4,11 +4,13 @@ import com.book_system.author_service.controller.request.AuthorRequestDto;
 import com.book_system.author_service.controller.response.AuthorResponseDto;
 import com.book_system.author_service.entity.AuthorEntity;
 import com.book_system.author_service.entity.NationalityEntity;
+import com.book_system.author_service.exception.GeneralException;
 import com.book_system.author_service.mapper.AuthorMapper;
 import com.book_system.author_service.repository.AuthorRepository;
 import com.book_system.author_service.repository.NationalityRepository;
 import com.book_system.author_service.service.AuthorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -37,7 +39,7 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorResponseDto getAuthorById(UUID idAuthor) {
         AuthorEntity author =  authorRepository
                 .findById(idAuthor)
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new GeneralException("Author not found", HttpStatus.NOT_FOUND));
 
         return authorMapper.toAuthorResponseDto(author);
     }

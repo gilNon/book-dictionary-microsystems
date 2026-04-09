@@ -1,4 +1,4 @@
-package com.book_system.book_service.exception;
+package com.book_system.author_service.exception;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;

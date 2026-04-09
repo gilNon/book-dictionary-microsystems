@@ -4,6 +4,8 @@ import com.book_system.book_service.controller.request.BookRequestDto;
 import com.book_system.book_service.controller.response.BookResponseDto;
 import com.book_system.book_service.entity.BookEntity;
 
+import java.time.LocalDate;
+
 public final class BookMapper {
 
     private BookMapper() {
@@ -20,7 +22,7 @@ public final class BookMapper {
         bookEntity.setPublisher(request.publisher());
         bookEntity.setCoverUrl(request.coverUrl());
         bookEntity.setAuthorId(request.authorId());
-        bookEntity.setPublicationDate(request.publicationDate());
+        bookEntity.setPublicationDate(LocalDate.parse(request.publicationDate()));
         bookEntity.setTitle(request.title());
 
         return bookEntity;

@@ -1,4 +1,4 @@
-package com.book_system.book_service.exception;
+package com.book_system.author_service.exception;
 
 import java.time.Instant;
 import java.util.List;

@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -32,7 +32,7 @@ public class BookEntity {
     private String publisher;
 
     @Column(name = "publication_date", nullable = false)
-    private Date publicationDate;
+    private LocalDate publicationDate;
 
     @Column(name = "edition", nullable = false)
     private String edition;

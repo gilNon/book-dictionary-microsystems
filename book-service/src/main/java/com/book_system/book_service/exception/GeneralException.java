@@ -1,8 +1,16 @@
 package com.book_system.book_service.exception;
 
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
 public class GeneralException extends RuntimeException {
 
-    public GeneralException(Long id) {
-        super("Book not found with id: " + id);
+    private final HttpStatus status;
+
+    public GeneralException(String message, HttpStatus httpStatus) {
+        super(message);
+        this.status = httpStatus;
     }
+    
 }

@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-import java.sql.Date;
 import java.util.UUID;
 
 public record BookRequestDto(
@@ -16,8 +15,8 @@ public record BookRequestDto(
         String isbn,
         @NotBlank(message = "Publisher is required")
         String publisher,
-        @NotNull(message = "Publication date is required")
-        Date publicationDate,
+        @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "Publication date must be in the format yyyy-MM-dd")
+        String publicationDate,
         @NotBlank(message = "Edition is required")
         String edition,
         @NotNull(message = "Genre ID is required")

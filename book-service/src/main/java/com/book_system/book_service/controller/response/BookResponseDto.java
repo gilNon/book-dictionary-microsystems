@@ -1,7 +1,7 @@
 package com.book_system.book_service.controller.response;
 
-import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public record BookResponseDto (
@@ -10,7 +10,7 @@ public record BookResponseDto (
         UUID authorId,
         String isbn,
         String publisher,
-        Date publicationDate,
+        LocalDate publicationDate,
         String edition,
         String genreId,
         Integer pageCount,
