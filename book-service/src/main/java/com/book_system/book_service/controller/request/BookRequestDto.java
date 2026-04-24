@@ -17,15 +17,9 @@ public record BookRequestDto(
         String publisher,
         @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "Publication date must be in the format yyyy-MM-dd")
         String publicationDate,
-        @NotBlank(message = "Edition is required")
-        String edition,
-        @NotNull(message = "Genre ID is required")
-        UUID genreId,
         @NotNull(message = "Page count is required")
         Integer pageCount,
         @NotBlank(message = "Description is required")
-        String description,
-        @NotBlank(message = "Cover URL is required")
-        String coverUrl
+        String description
 ) {
 }

@@ -51,3 +51,9 @@ info:
     name: ${spring.application.name}
     version: 1.0.0
     description: Author Microservice for book-dictionary-microservices
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

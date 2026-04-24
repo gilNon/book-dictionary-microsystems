@@ -11,11 +11,8 @@ public record BookResponseDto (
         String isbn,
         String publisher,
         LocalDate publicationDate,
-        String edition,
-        String genreId,
         Integer pageCount,
         String description,
-        String coverUrl,
         Instant createdAt,
         Instant updatedAt
 ) {

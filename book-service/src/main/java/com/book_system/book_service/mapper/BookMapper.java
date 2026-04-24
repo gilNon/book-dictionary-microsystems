@@ -15,12 +15,10 @@ public final class BookMapper {
     public static BookEntity toEntity(BookRequestDto request) {
         BookEntity bookEntity = new BookEntity();
         bookEntity.setActive(true);
-        bookEntity.setEdition(request.edition());
         bookEntity.setDescription(request.description());
         bookEntity.setIsbn(request.isbn());
         bookEntity.setPageCount(request.pageCount());
         bookEntity.setPublisher(request.publisher());
-        bookEntity.setCoverUrl(request.coverUrl());
         bookEntity.setAuthorId(request.authorId());
         bookEntity.setPublicationDate(LocalDate.parse(request.publicationDate()));
         bookEntity.setTitle(request.title());
@@ -36,11 +34,8 @@ public final class BookMapper {
                 bookEntity.getIsbn(),
                 bookEntity.getPublisher(),
                 bookEntity.getPublicationDate(),
-                bookEntity.getEdition(),
-                bookEntity.getGenre().getName(),
                 bookEntity.getPageCount(),
                 bookEntity.getDescription(),
-                bookEntity.getCoverUrl(),
                 bookEntity.getCreatedAt(),
                 bookEntity.getUpdatedAt()
         );

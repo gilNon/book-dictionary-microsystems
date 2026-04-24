@@ -5,11 +5,9 @@ import com.book_system.book_service.controller.response.BookResponseDto;
 import com.book_system.book_service.controller.response.PagesDataResponse;
 import com.book_system.book_service.controller.response.PaginationResponse;
 import com.book_system.book_service.entity.BookEntity;
-import com.book_system.book_service.entity.GenreEntity;
 import com.book_system.book_service.exception.GeneralException;
 import com.book_system.book_service.mapper.BookMapper;
 import com.book_system.book_service.repository.BookRepository;
-import com.book_system.book_service.repository.GenreRepository;
 import com.book_system.book_service.restClient.AuthorRestClient;
 import com.book_system.book_service.restClient.response.AuthorResponseDto;
 import com.book_system.book_service.service.BookService;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,17 +30,11 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
-    private final GenreRepository genreRepository;
     private final AuthorRestClient authorRestClient;
 
     public BookResponseDto saveBook(BookRequestDto request) {
         AuthorResponseDto authorResponseDto = getAuthorById(request.authorId());
-
-        GenreEntity genreEntity = genreRepository.findById(request.genreId())
-                .orElseThrow(() -> new GeneralException("Genre not found", HttpStatus.BAD_REQUEST));
-
         BookEntity bookEntity = BookMapper.toEntity(request);
-        bookEntity.setGenre(genreEntity);
 
         return BookMapper.toResponseDto(saveBookEntity(bookEntity));
 
@@ -57,7 +48,7 @@ public class BookServiceImpl implements BookService {
                 .toList();
 
         PaginationResponse paginationResponse = new PaginationResponse(bookEntityPage);
-        return new PagesDataResponse(bookResponseDtoList, Instant.now(), new PaginationResponse(bookEntityPage));
+        return new PagesDataResponse<>(bookResponseDtoList, Instant.now(), new PaginationResponse(bookEntityPage));
     }
 
     private BookEntity saveBookEntity(BookEntity bookEntity) {
