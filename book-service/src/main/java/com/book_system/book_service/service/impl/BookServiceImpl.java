@@ -1,6 +1,7 @@
 package com.book_system.book_service.service.impl;
 
 import com.book_system.book_service.controller.request.BookRequestDto;
+import com.book_system.book_service.controller.response.BookResponseDetails;
 import com.book_system.book_service.controller.response.BookResponseDto;
 import com.book_system.book_service.controller.response.PagesDataResponse;
 import com.book_system.book_service.controller.response.PaginationResponse;
@@ -9,7 +10,7 @@ import com.book_system.book_service.exception.GeneralException;
 import com.book_system.book_service.mapper.BookMapper;
 import com.book_system.book_service.repository.BookRepository;
 import com.book_system.book_service.restClient.AuthorRestClient;
-import com.book_system.book_service.restClient.response.AuthorResponseDto;
+import com.book_system.book_service.restClient.response.AuthorResponseRestClient;
 import com.book_system.book_service.service.BookService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +35,7 @@ public class BookServiceImpl implements BookService {
     private final AuthorRestClient authorRestClient;
 
     public BookResponseDto saveBook(BookRequestDto request) {
-        AuthorResponseDto authorResponseDto = getAuthorById(request.authorId());
+        getAuthorById(request.authorId());
         BookEntity bookEntity = BookMapper.toEntity(request);
 
         return BookMapper.toResponseDto(saveBookEntity(bookEntity));
@@ -41,14 +43,26 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public PagesDataResponse<List<BookResponseDto>> findAllBooks(Pageable pageable) {
-        Page<BookEntity> bookEntityPage = bookRepository.findAll(pageable);
-        List<BookResponseDto> bookResponseDtoList = bookEntityPage.getContent().stream()
-                .map(BookMapper::toResponseDto)
-                .toList();
+    public PagesDataResponse<List<BookResponseDto>> findAllBooks(Pageable pageable, UUID idAuthor) {
+        Page<BookEntity> bookEntityPage = (null == idAuthor)
+                ? bookRepository.findAll(pageable)
+                : bookRepository.findAllByAuthorId(pageable, idAuthor);
 
-        PaginationResponse paginationResponse = new PaginationResponse(bookEntityPage);
+        List<BookResponseDto> bookResponseDtoList = bookEntityPage.getContent().stream()
+                    .map(BookMapper::toResponseDto)
+                    .toList();
+
         return new PagesDataResponse<>(bookResponseDtoList, Instant.now(), new PaginationResponse(bookEntityPage));
+    }
+
+    @Override
+    public BookResponseDetails findBookById(UUID idBook) {
+         BookEntity bookEntity = bookRepository.findById(idBook).orElseThrow(
+                 () -> new GeneralException("Book not found", HttpStatus.NOT_FOUND));
+
+        AuthorResponseRestClient authorResponseDto = getAuthorById(bookEntity.getAuthorId());
+
+        return BookMapper.toResponseDetailsDto(bookEntity, authorResponseDto);
     }
 
     private BookEntity saveBookEntity(BookEntity bookEntity) {
@@ -66,7 +80,7 @@ public class BookServiceImpl implements BookService {
 
     }
 
-    private AuthorResponseDto getAuthorById(UUID authorId) {
+    private AuthorResponseRestClient getAuthorById(UUID authorId) {
         return authorRestClient.getAuthorById(authorId);
     }
 

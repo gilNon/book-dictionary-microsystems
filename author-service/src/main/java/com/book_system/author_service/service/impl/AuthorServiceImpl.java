@@ -2,15 +2,21 @@ package com.book_system.author_service.service.impl;
 
 import com.book_system.author_service.controller.request.AuthorRequestDto;
 import com.book_system.author_service.controller.response.AuthorResponseDto;
+import com.book_system.author_service.controller.response.PagesDataResponse;
+import com.book_system.author_service.controller.response.PaginationResponse;
 import com.book_system.author_service.entity.AuthorEntity;
 import com.book_system.author_service.exception.GeneralException;
 import com.book_system.author_service.mapper.AuthorMapper;
 import com.book_system.author_service.repository.AuthorRepository;
 import com.book_system.author_service.service.AuthorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,6 +40,16 @@ public class AuthorServiceImpl implements AuthorService {
                 .orElseThrow(() -> new GeneralException("Author not found", HttpStatus.NOT_FOUND));
 
         return authorMapper.toAuthorResponseDto(author);
+    }
+
+    @Override
+    public PagesDataResponse<List<AuthorResponseDto>> findAllAuthors(Pageable pageable) {
+        Page<AuthorEntity> authorEntityPage = authorRepository.findAll(pageable);
+        List<AuthorResponseDto> authorResponses = authorEntityPage.getContent().stream()
+                .map(authorMapper::toAuthorResponseDto)
+                .toList();
+
+        return new PagesDataResponse<>(authorResponses, Instant.now(), new PaginationResponse(authorEntityPage));
     }
 
 }

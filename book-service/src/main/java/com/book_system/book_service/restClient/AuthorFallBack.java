@@ -1,7 +1,7 @@
 package com.book_system.book_service.restClient;
 
 import com.book_system.book_service.exception.GeneralException;
-import com.book_system.book_service.restClient.response.AuthorResponseDto;
+import com.book_system.book_service.restClient.response.AuthorResponseRestClient;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FallbackFactory;
@@ -19,7 +19,7 @@ public class AuthorFallBack implements FallbackFactory<AuthorRestClient> {
 
         return new AuthorRestClient() {
             @Override
-            public AuthorResponseDto getAuthorById(UUID idAuthor) {
+            public AuthorResponseRestClient getAuthorById(UUID idAuthor) {
                 if (cause instanceof FeignException.NotFound) {
                     throw new GeneralException("Author not found", HttpStatus.NOT_FOUND);
                 }

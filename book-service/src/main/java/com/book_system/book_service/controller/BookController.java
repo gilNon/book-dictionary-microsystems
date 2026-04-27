@@ -1,6 +1,7 @@
 package com.book_system.book_service.controller;
 
 import com.book_system.book_service.controller.request.BookRequestDto;
+import com.book_system.book_service.controller.response.BookResponseDetails;
 import com.book_system.book_service.controller.response.BookResponseDto;
 import com.book_system.book_service.controller.response.PagesDataResponse;
 import com.book_system.book_service.service.impl.BookServiceImpl;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/books")
@@ -30,8 +32,16 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<PagesDataResponse<List<BookResponseDto>>> findAllBooks(
-            @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return new ResponseEntity<>(bookService.findAllBooks(pageable), HttpStatus.OK);
+            @PageableDefault(page = 0, size = 10) Pageable pageable,
+            @RequestParam(name = "authorId", required = false) UUID authorId) {
+        return new ResponseEntity<>(bookService.findAllBooks(pageable, authorId), HttpStatus.OK);
     }
+
+    @GetMapping("/{idBook}")
+    public ResponseEntity<BookResponseDetails> findBookById(@PathVariable UUID idBook) {
+        return new ResponseEntity<>(bookService.findBookById(idBook), HttpStatus.OK);
+    }
+
+
 
 }

@@ -1,7 +1,13 @@
 package com.book_system.book_service.repository;
 
 import com.book_system.book_service.entity.BookEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BookRepository extends JpaRepository<BookEntity, Long> {
+import java.util.UUID;
+
+public interface BookRepository extends JpaRepository<BookEntity, UUID> {
+
+    Page<BookEntity> findAllByAuthorId(Pageable pageable, UUID authorId);
 }

@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record AuthorResponseDto(
+public record AuthorResponseRestClient(
         UUID id,
         String name,
         String lastName,
