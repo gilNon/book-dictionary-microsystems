@@ -13,8 +13,14 @@ CREATE TABLE book(
     CONSTRAINT book_isbn_key UNIQUE (isbn)
 );
 
-CREATE INDEX idx_book_title
-ON book(title);
+create extension if not exists pg_trgm;
+
+create index idx_title_trgm
+    on book
+    using GIN(title gin_trgm_ops);
+
+create index idx_author_id
+    on book(author_id);
 
 CREATE INDEX idx_isbn
 ON book(isbn);

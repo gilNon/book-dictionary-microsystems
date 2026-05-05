@@ -33,8 +33,9 @@ public class BookController {
     @GetMapping
     public ResponseEntity<PagesDataResponse<List<BookResponseDto>>> findAllBooks(
             @PageableDefault(page = 0, size = 10) Pageable pageable,
-            @RequestParam(name = "authorId", required = false) UUID authorId) {
-        return new ResponseEntity<>(bookService.findAllBooks(pageable, authorId), HttpStatus.OK);
+            @RequestParam(name = "authorId", required = false) UUID authorId,
+            @RequestParam(name = "title", required = false) String title) {
+        return new ResponseEntity<>(bookService.findAllBooks(pageable, authorId, title), HttpStatus.OK);
     }
 
     @GetMapping("/{idBook}")

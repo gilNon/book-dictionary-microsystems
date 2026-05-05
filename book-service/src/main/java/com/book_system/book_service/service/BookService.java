@@ -13,7 +13,7 @@ public interface BookService {
 
     BookResponseDto saveBook(BookRequestDto request);
 
-    PagesDataResponse<List<BookResponseDto>> findAllBooks(Pageable pageable, UUID idAuthor);
+    PagesDataResponse<List<BookResponseDto>> findAllBooks(Pageable pageable, UUID idAuthor, String title);
 
     BookResponseDetails findBookById(UUID idBook);
 

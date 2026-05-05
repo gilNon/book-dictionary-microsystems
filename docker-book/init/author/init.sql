@@ -6,5 +6,8 @@ CREATE TABLE author(
     updated_at TIMESTAMP
 );
 
-CREATE INDEX idx_author_name
-ON author(name);
+create extension if not exists pg_trgm;
+
+create index idx_name_trgm
+    on author
+    using GIN(name gin_trgm_ops);

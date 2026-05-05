@@ -22,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,14 +38,11 @@ public class BookServiceImpl implements BookService {
         BookEntity bookEntity = BookMapper.toEntity(request);
 
         return BookMapper.toResponseDto(saveBookEntity(bookEntity));
-
     }
 
     @Override
-    public PagesDataResponse<List<BookResponseDto>> findAllBooks(Pageable pageable, UUID idAuthor) {
-        Page<BookEntity> bookEntityPage = (null == idAuthor)
-                ? bookRepository.findAll(pageable)
-                : bookRepository.findAllByAuthorId(pageable, idAuthor);
+    public PagesDataResponse<List<BookResponseDto>> findAllBooks(Pageable pageable, UUID idAuthor, String title) {
+        Page<BookEntity> bookEntityPage = findBooksByParams(pageable, idAuthor, title );
 
         List<BookResponseDto> bookResponseDtoList = bookEntityPage.getContent().stream()
                     .map(BookMapper::toResponseDto)
@@ -63,6 +59,19 @@ public class BookServiceImpl implements BookService {
         AuthorResponseRestClient authorResponseDto = getAuthorById(bookEntity.getAuthorId());
 
         return BookMapper.toResponseDetailsDto(bookEntity, authorResponseDto);
+    }
+
+    private Page<BookEntity> findBooksByParams(Pageable pageable, UUID idAuthor, String title) {
+        Page<BookEntity> bookEntityPage;
+        if (idAuthor == null && title == null) {
+            return bookEntityPage = bookRepository.findAll(pageable);
+        } else if (idAuthor != null && title == null) {
+            return bookEntityPage = bookRepository.findAllByAuthorId(pageable, idAuthor);
+        } else if(idAuthor == null) {
+            return bookEntityPage = bookRepository.findAllByTitle(pageable, title);
+        } else {
+            return bookEntityPage = bookRepository.findAllByTitleAndAuthor(pageable,title, idAuthor);
+        }
     }
 
     private BookEntity saveBookEntity(BookEntity bookEntity) {
