@@ -15,10 +15,12 @@ public interface BookRepository extends JpaRepository<BookEntity, UUID> {
     @Query(value = """
             SELECT * FROM book
             WHERE title ilike CONCAT('%', :title, '%')
+            AND active = true
     """, countQuery = """
             SELECT COUNT(*)
             FROM book
             WHERE title ILIKE CONCAT('%', :title, '%')
+            AND active = true
     """,nativeQuery = true)
     Page<BookEntity> findAllByTitle(Pageable pageable, String title);
 
@@ -28,11 +30,13 @@ public interface BookRepository extends JpaRepository<BookEntity, UUID> {
         FROM book
         WHERE title ILIKE CONCAT('%', :title, '%')
         AND author_id = :authorId
+        AND active = true
     """, countQuery = """
         SELECT COUNT(*)
         FROM book
         WHERE title ILIKE CONCAT('%', :title, '%')
-      AND author_id = :authorId
+        AND author_id = :authorId
+        AND active = true
     """,
             nativeQuery = true)
     Page<BookEntity> findAllByTitleAndAuthor(Pageable pageable, String title, UUID authorId);

@@ -32,12 +32,13 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final AuthorRestClient authorRestClient;
+    private final BookMapper bookMapper;
 
     public BookResponseDto saveBook(BookRequestDto request) {
         getAuthorById(request.authorId());
-        BookEntity bookEntity = BookMapper.toEntity(request);
+        BookEntity bookEntity = bookMapper.toEntity(request);
 
-        return BookMapper.toResponseDto(saveBookEntity(bookEntity));
+        return bookMapper.toResponseDto(saveBookEntity(bookEntity));
     }
 
     @Override
@@ -45,7 +46,7 @@ public class BookServiceImpl implements BookService {
         Page<BookEntity> bookEntityPage = findBooksByParams(pageable, idAuthor, title );
 
         List<BookResponseDto> bookResponseDtoList = bookEntityPage.getContent().stream()
-                    .map(BookMapper::toResponseDto)
+                    .map(bookMapper::toResponseDto)
                     .toList();
 
         return new PagesDataResponse<>(bookResponseDtoList, Instant.now(), new PaginationResponse(bookEntityPage));
@@ -58,7 +59,15 @@ public class BookServiceImpl implements BookService {
 
         AuthorResponseRestClient authorResponseDto = getAuthorById(bookEntity.getAuthorId());
 
-        return BookMapper.toResponseDetailsDto(bookEntity, authorResponseDto);
+        return bookMapper.toResponseDetailsDto(bookEntity, authorResponseDto);
+    }
+
+    @Override
+    public void deleteBookById(UUID idBook) {
+        BookEntity bookEntity = bookRepository.findById(idBook).orElseThrow(
+                () -> new GeneralException("Book not found", HttpStatus.NOT_FOUND));
+        bookEntity.setActive(false);
+        bookRepository.save(bookEntity);
     }
 
     private Page<BookEntity> findBooksByParams(Pageable pageable, UUID idAuthor, String title) {

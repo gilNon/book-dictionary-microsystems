@@ -68,9 +68,12 @@ public class AuthorController {
     @GetMapping
     @Operation(summary = "Get all authors", description = "Return all author by page")
     @Parameters(value = {
-            @Parameter(name = "page", description = "Page number (0-based)", schema = @Schema(type = "integer", defaultValue = "0", minimum = "0")),
-            @Parameter(name = "size", description = "Number of records per page", schema = @Schema(type = "integer", defaultValue = "10", minimum = "1")),
-            @Parameter(name = "sort", description = "Sort criteria in the format: property,(asc|desc). Supports multiple values.", schema = @Schema(type = "string", example = "name,asc"))
+            @Parameter(name = "page", description = "Page number (0-based)",
+                    schema = @Schema(type = "integer", defaultValue = "0", minimum = "0")),
+            @Parameter(name = "size", description = "Number of records per page",
+                    schema = @Schema(type = "integer", defaultValue = "10", minimum = "1")),
+            @Parameter(name = "sort", description = "Sort criteria in the format: property,(asc|desc). Supports multiple values.",
+                    schema = @Schema(type = "string", example = "name,asc"))
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Authors found",
@@ -78,9 +81,10 @@ public class AuthorController {
             @ApiResponse(responseCode = "403", description = "Forbidden: access denied", content = @Content)
     })
     public ResponseEntity<PagesDataResponse<List<AuthorResponseDto>>> getAllAuthor(
-            @PageableDefault(page = 0, size = 10) Pageable pageable
+            @PageableDefault(page = 0, size = 10) Pageable pageable,
+            @RequestParam(name = "name", required = false) String name
             ) {
-        return new ResponseEntity<>(authorService.findAllAuthors(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(authorService.findAllAuthors(pageable, name), HttpStatus.OK);
     }
 
 }

@@ -5,56 +5,24 @@ import com.book_system.book_service.controller.response.BookResponseDetails;
 import com.book_system.book_service.controller.response.BookResponseDto;
 import com.book_system.book_service.entity.BookEntity;
 import com.book_system.book_service.restClient.response.AuthorResponseRestClient;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import java.time.LocalDate;
+@Mapper(componentModel = "spring", uses = AuthorMapper.class)
+public interface BookMapper {
 
-public final class BookMapper {
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "active", constant = "true")
+    @Mapping(target = "publicationDate", expression = "java(java.time.LocalDate.parse(request.publicationDate()))")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    BookEntity toEntity(BookRequestDto request);
 
-    private BookMapper() {
-    }
+    BookResponseDto toResponseDto(BookEntity bookEntity);
 
-
-    public static BookEntity toEntity(BookRequestDto request) {
-        BookEntity bookEntity = new BookEntity();
-        bookEntity.setActive(true);
-        bookEntity.setDescription(request.description());
-        bookEntity.setIsbn(request.isbn());
-        bookEntity.setPageCount(request.pageCount());
-        bookEntity.setPublisher(request.publisher());
-        bookEntity.setAuthorId(request.authorId());
-        bookEntity.setPublicationDate(LocalDate.parse(request.publicationDate()));
-        bookEntity.setTitle(request.title());
-
-        return bookEntity;
-    }
-
-    public static BookResponseDto toResponseDto(BookEntity bookEntity) {
-        return new BookResponseDto(
-                bookEntity.getId(),
-                bookEntity.getTitle(),
-                bookEntity.getAuthorId(),
-                bookEntity.getIsbn(),
-                bookEntity.getPublisher(),
-                bookEntity.getPublicationDate(),
-                bookEntity.getPageCount(),
-                bookEntity.getDescription(),
-                bookEntity.getCreatedAt(),
-                bookEntity.getUpdatedAt()
-        );
-    }
-
-    public static BookResponseDetails toResponseDetailsDto(BookEntity bookEntity, AuthorResponseRestClient author) {
-        return new BookResponseDetails(
-                bookEntity.getId(),
-                bookEntity.getTitle(),
-                AuthorMapper.toResponseDto(author),
-                bookEntity.getIsbn(),
-                bookEntity.getPublisher(),
-                bookEntity.getPublicationDate(),
-                bookEntity.getPageCount(),
-                bookEntity.getDescription(),
-                bookEntity.getCreatedAt(),
-                bookEntity.getUpdatedAt()
-        );
-    }
+    @Mapping(target = "id", source = "bookEntity.id")
+    @Mapping(target = "createdAt", source = "bookEntity.createdAt")
+    @Mapping(target = "updatedAt", source = "bookEntity.updatedAt")
+    @Mapping(target = "authorResponseDto", source = "author")
+    BookResponseDetails toResponseDetailsDto(BookEntity bookEntity, AuthorResponseRestClient author);
 }

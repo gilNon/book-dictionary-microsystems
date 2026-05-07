@@ -25,7 +25,6 @@ public class BookController {
     private final BookServiceImpl bookService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<BookResponseDto> create(@Valid @RequestBody BookRequestDto request) {
         return new ResponseEntity<>(bookService.saveBook(request), HttpStatus.CREATED);
     }
@@ -43,6 +42,10 @@ public class BookController {
         return new ResponseEntity<>(bookService.findBookById(idBook), HttpStatus.OK);
     }
 
-
+    @DeleteMapping("/{idBook}")
+    public ResponseEntity<Void> deleteBook(@PathVariable UUID idBook) {
+        bookService.deleteBookById(idBook);
+        return new ResponseEntity<>( HttpStatus.NO_CONTENT);
+    }
 
 }

@@ -14,5 +14,5 @@ public interface AuthorService {
 
     AuthorResponseDto getAuthorById(UUID idAuthor);
 
-    PagesDataResponse<List<AuthorResponseDto>> findAllAuthors(Pageable pageable);
+    PagesDataResponse<List<AuthorResponseDto>> findAllAuthors(Pageable pageable, String name);
 }

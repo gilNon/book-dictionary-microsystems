@@ -2,15 +2,10 @@ package com.book_system.book_service.mapper;
 
 import com.book_system.book_service.controller.response.AuthorResponseDto;
 import com.book_system.book_service.restClient.response.AuthorResponseRestClient;
+import org.mapstruct.Mapper;
 
-public class AuthorMapper {
+@Mapper(componentModel = "spring")
+public interface AuthorMapper {
 
-    public static AuthorResponseDto toResponseDto(AuthorResponseRestClient author) {
-        return new AuthorResponseDto(
-                author.id(),
-                author.name(),
-                author.createdAt(),
-                author.updatedAt()
-        );
-    }
+    AuthorResponseDto toResponseDto(AuthorResponseRestClient author);
 }

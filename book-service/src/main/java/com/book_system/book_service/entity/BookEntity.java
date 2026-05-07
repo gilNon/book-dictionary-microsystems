@@ -3,6 +3,7 @@ package com.book_system.book_service.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Table(name = "book")
 @Getter
 @Setter
+@SQLRestriction("active = true")
 public class BookEntity {
 
     @Id

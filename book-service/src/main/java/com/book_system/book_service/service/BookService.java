@@ -17,4 +17,6 @@ public interface BookService {
 
     BookResponseDetails findBookById(UUID idBook);
 
+    void deleteBookById(UUID idBook);
+
 }

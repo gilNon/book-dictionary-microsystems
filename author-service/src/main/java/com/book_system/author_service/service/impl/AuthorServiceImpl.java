@@ -43,8 +43,14 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public PagesDataResponse<List<AuthorResponseDto>> findAllAuthors(Pageable pageable) {
-        Page<AuthorEntity> authorEntityPage = authorRepository.findAll(pageable);
+    public PagesDataResponse<List<AuthorResponseDto>> findAllAuthors(Pageable pageable, String name) {
+        Page<AuthorEntity> authorEntityPage;
+        if (name == null) {
+            authorEntityPage = authorRepository.findAll(pageable);
+        } else {
+            authorEntityPage = authorRepository.findAllAuthorByName(pageable, name);
+        }
+
         List<AuthorResponseDto> authorResponses = authorEntityPage.getContent().stream()
                 .map(authorMapper::toAuthorResponseDto)
                 .toList();
