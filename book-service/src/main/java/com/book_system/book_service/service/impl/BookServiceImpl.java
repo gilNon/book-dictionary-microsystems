@@ -34,8 +34,8 @@ public class BookServiceImpl implements BookService {
     private final AuthorRestClient authorRestClient;
     private final BookMapper bookMapper;
 
-    public BookResponseDto saveBook(BookRequestDto request) {
-        getAuthorById(request.authorId());
+    public BookResponseDto saveBook(BookRequestDto request, String token) {
+        getAuthorById(request.authorId(), token);
         BookEntity bookEntity = bookMapper.toEntity(request);
 
         return bookMapper.toResponseDto(saveBookEntity(bookEntity));
@@ -53,11 +53,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookResponseDetails findBookById(UUID idBook) {
+    public BookResponseDetails findBookById(UUID idBook, String token) {
          BookEntity bookEntity = bookRepository.findById(idBook).orElseThrow(
                  () -> new GeneralException("Book not found", HttpStatus.NOT_FOUND));
 
-        AuthorResponseRestClient authorResponseDto = getAuthorById(bookEntity.getAuthorId());
+        AuthorResponseRestClient authorResponseDto = getAuthorById(bookEntity.getAuthorId(), token);
 
         return bookMapper.toResponseDetailsDto(bookEntity, authorResponseDto);
     }
@@ -98,8 +98,9 @@ public class BookServiceImpl implements BookService {
 
     }
 
-    private AuthorResponseRestClient getAuthorById(UUID authorId) {
-        return authorRestClient.getAuthorById(authorId);
+    private AuthorResponseRestClient getAuthorById(UUID authorId, String token) {
+        String authorizationHeader = "Bearer " + token;
+        return authorRestClient.getAuthorById(authorId, authorizationHeader);
     }
 
 }

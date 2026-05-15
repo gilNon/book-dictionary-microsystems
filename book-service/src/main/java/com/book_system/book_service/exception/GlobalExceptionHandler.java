@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -104,6 +105,15 @@ public class GlobalExceptionHandler {
         }
 
         return buildResponse(status, message, request, details);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponseDto> handleAuthorizationDenied(AuthorizationDeniedException ex,
+                                                                       HttpServletRequest request) {
+        log.warn("Access denied at {} - User lacks required permissions", request.getRequestURI());
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        String message = "Access denied: You don't have the required permissions to perform this action";
+        return buildResponse(status, message, request, List.of());
     }
 
     @ExceptionHandler(NoResourceFoundException.class)

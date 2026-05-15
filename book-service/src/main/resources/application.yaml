@@ -15,6 +15,12 @@ spring:
       circuitbreaker:
         enabled: true
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:7080/realms/books/protocol/openid-connect/certs
+
   jpa:
     hibernate:
       ddl-auto: none

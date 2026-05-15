@@ -11,11 +11,11 @@ import java.util.UUID;
 
 public interface BookService {
 
-    BookResponseDto saveBook(BookRequestDto request);
+    BookResponseDto saveBook(BookRequestDto request, String token);
 
     PagesDataResponse<List<BookResponseDto>> findAllBooks(Pageable pageable, UUID idAuthor, String title);
 
-    BookResponseDetails findBookById(UUID idBook);
+    BookResponseDetails findBookById(UUID idBook, String token);
 
     void deleteBookById(UUID idBook);
 

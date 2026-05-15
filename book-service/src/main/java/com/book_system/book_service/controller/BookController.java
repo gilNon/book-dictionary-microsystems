@@ -12,6 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,24 +27,32 @@ public class BookController {
 
     private final BookServiceImpl bookService;
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<BookResponseDto> create(@Valid @RequestBody BookRequestDto request) {
-        return new ResponseEntity<>(bookService.saveBook(request), HttpStatus.CREATED);
+    public ResponseEntity<BookResponseDto> create(@Valid @RequestBody BookRequestDto request,
+                                                  @AuthenticationPrincipal Jwt jwt) {
+        String token = jwt.getTokenValue();
+        return new ResponseEntity<>(bookService.saveBook(request, token), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<PagesDataResponse<List<BookResponseDto>>> findAllBooks(
             @PageableDefault(page = 0, size = 10) Pageable pageable,
             @RequestParam(name = "authorId", required = false) UUID authorId,
-            @RequestParam(name = "title", required = false) String title) {
+            @RequestParam(name = "title", required = false) String title,
+            @AuthenticationPrincipal Jwt jwt) {
+        System.out.println(jwt.getTokenValue());
         return new ResponseEntity<>(bookService.findAllBooks(pageable, authorId, title), HttpStatus.OK);
     }
 
     @GetMapping("/{idBook}")
-    public ResponseEntity<BookResponseDetails> findBookById(@PathVariable UUID idBook) {
-        return new ResponseEntity<>(bookService.findBookById(idBook), HttpStatus.OK);
+    public ResponseEntity<BookResponseDetails> findBookById(@PathVariable UUID idBook,
+                                                            @AuthenticationPrincipal Jwt jwt) {
+        String token = jwt.getTokenValue();
+        return new ResponseEntity<>(bookService.findBookById(idBook, token), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{idBook}")
     public ResponseEntity<Void> deleteBook(@PathVariable UUID idBook) {
         bookService.deleteBookById(idBook);

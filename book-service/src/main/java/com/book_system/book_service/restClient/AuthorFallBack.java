@@ -19,7 +19,7 @@ public class AuthorFallBack implements FallbackFactory<AuthorRestClient> {
 
         return new AuthorRestClient() {
             @Override
-            public AuthorResponseRestClient getAuthorById(UUID idAuthor) {
+            public AuthorResponseRestClient getAuthorById(UUID idAuthor, String authorization) {
                 if (cause instanceof FeignException.NotFound) {
                     throw new GeneralException("Author not found", HttpStatus.NOT_FOUND);
                 }
